@@ -8,7 +8,7 @@ A professional deployment of the HexGL WebGL racing game, showcasing Infrastruct
 ---
 
 ## 📸 Preview
-![Game Preview](./screenshots/preview.png)
+![Game Preview](./screenshots/gameplay.png)
 
 ---
 
