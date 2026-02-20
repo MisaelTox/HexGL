@@ -1,26 +1,66 @@
-## 🌐 Live Demo
-The game is live and hosted on AWS S3:
-[Check out HexGL on AWS](http://misael-hexgl-portfolio-2026.s3-website.eu-north-1.amazonaws.com)
+# HexGL: Cloud Infrastructure & Deployment 🏎️💨
 
-# HexGL - Cloud Deployment Edition 🏎️💨
+A professional deployment of the HexGL WebGL racing game, showcasing Infrastructure as Code (IaC), containerization, and cloud hosting best practices.
+
+## 🌐 Live Demo
+**Play the game here:** [HexGL on AWS S3](http://misael-hexgl-portfolio-2026.s3-website.eu-north-1.amazonaws.com)
+
+---
 
 ## 📸 Preview
-![HexGL running on AWS S3](./screenshots/deployment-hero.png)
+![Game Preview](./screenshots/preview.png)
 
-*Deployment URL:* [Visit the game](http://misael-hexgl-portfolio-2026.s3-website.eu-north-1.amazonaws.com)
+---
 
-## 🛠 Deployment Journey (Lessons Learned)
+## 🛠️ Tech Stack & Skills
+* **Cloud Provider:** AWS (S3 for Static Web Hosting)
+* **Infrastructure as Code:** Terraform
+* **Containerization:** Docker (Nginx-based)
+* **CI/CD & CLI:** AWS CLI, Git, Linux Bash
 
-### 1. Terraform Dependency Management
-I encountered a race condition where the S3 Bucket Policy was being applied before the Public Access Block was fully removed. 
-**Solution:** Implemented `depends_on` to enforce a strict resource creation order.
+## 🏗️ Architecture Overview
+The project follows a modern cloud workflow:
+1.  **Local Development:** The application is containerized using Docker for consistent local testing.
+2.  **IaC Provisioning:** Terraform manages the S3 bucket, public access blocks, and bucket policies.
+3.  **Deployment:** Assets are synchronized to the cloud using the AWS CLI.
 
-### 2. Multi-Account AWS CLI Management
-Faced `AuthorizationHeaderMalformed` errors due to legacy SSO sessions. 
-**Solution:** Successfully bypassed credential corruption by utilizing temporary environment variables and explicitly defining regional endpoints for the `eu-north-1` region.
+---
 
-### 3. Static Web Hosting
-Configured S3 for high-availability static hosting, ensuring `index.html` is correctly routed as the entry point.
+## 🚀 How to Run this Project
+
+### Local (Docker)
+1. Build the image:
+   ```bash
+   docker build -t hexgl-game .
+Run the container:
+
+Bash
+docker run -d -p 8080:80 hexgl-game
+Access at http://localhost:8080.
+
+Cloud (Terraform)
+Initialize Terraform:
+
+Bash
+cd terraform
+terraform init
+Deploy Infrastructure:
+
+Bash
+terraform plan -out=main.tfplan
+terraform apply "main.tfplan"
+💡 Lessons Learned & Troubleshooting
+1. Terraform Race Conditions
+Problem: Encountered a 403 Forbidden error during deployment because the S3 Bucket Policy was attempting to apply before the PublicAccessBlock had finished updating.
+Solution: Implemented an explicit depends_on block in Terraform to ensure the correct sequence of resource creation.
+
+2. AWS CLI Authentication Issues
+Problem: Legacy SSO session conflicts caused AuthorizationHeaderMalformed errors.
+Solution: Debugged the AWS CLI credential precedence and utilized temporary Environment Variables to bypass corrupted profiles and ensure a clean deployment to the eu-north-1 region.
+
+3. Static Web Hosting Configuration
+Configured S3 with specific Index Document rules to ensure seamless routing for the WebGL assets and the main entry point (index.html).
+
 
 
 HexGL
