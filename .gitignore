@@ -1,1 +1,18 @@
+# Terraform local state and history
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+*.tfvars
+*.tfvars.json
+
+# Terraform lock file 
+.terraform.lock.hcl
+
+# Docker logs and local data
+*.log
+.docker/
+
+# OS files
 .DS_Store
+Thumbs.db
