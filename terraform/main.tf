@@ -29,7 +29,7 @@ resource "aws_s3_bucket_public_access_block" "public_block" {
 
 resource "aws_s3_bucket_policy" "allow_public_read" {
   bucket = aws_s3_bucket.game_hosting.id
-  
+
   # ESTA ES LA CLAVE:
   depends_on = [aws_s3_bucket_public_access_block.public_block]
 
