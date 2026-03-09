@@ -1,11 +1,10 @@
-# Usa la imagen oficial de Nginx
+# Use the official Nginx Alpine image
 FROM nginx:alpine
 
-# Copia el contenido del juego a la carpeta que sirve Nginx
-# Asumiendo que los archivos del juego están en la raíz o una carpeta /code
+# Copy game files to the Nginx web root directory
 COPY . /usr/share/nginx/html
 
-# Expone el puerto 80
+# Expose port 80 for HTTP traffic
 EXPOSE 80
 
 CMD ["nginx", "-g", "daemon off;"]

@@ -1,14 +1,14 @@
-# Definimos el proveedor
+# AWS provider configuration
 provider "aws" {
-  region = "eu-north-1" # Puedes cambiarla por la que prefieras
+  region = var.aws_region
 }
 
-# Creamos el bucket de S3
+# S3 bucket for static game hosting
 resource "aws_s3_bucket" "game_hosting" {
-  bucket = "misael-hexgl-portfolio-2026" # DEBE SER ÚNICO EN TODO EL MUNDO
+  bucket = var.bucket_name # Must be globally unique across all AWS accounts
 }
 
-# Configuramos el bucket para que funcione como un sitio web
+# Configure the bucket as a static website
 resource "aws_s3_bucket_website_configuration" "hosting_config" {
   bucket = aws_s3_bucket.game_hosting.id
 
@@ -17,7 +17,7 @@ resource "aws_s3_bucket_website_configuration" "hosting_config" {
   }
 }
 
-# Permitimos que el bucket sea público (necesario para hosting web)
+# Allow public access (required for static website hosting)
 resource "aws_s3_bucket_public_access_block" "public_block" {
   bucket = aws_s3_bucket.game_hosting.id
 
@@ -30,7 +30,7 @@ resource "aws_s3_bucket_public_access_block" "public_block" {
 resource "aws_s3_bucket_policy" "allow_public_read" {
   bucket = aws_s3_bucket.game_hosting.id
 
-  # ESTA ES LA CLAVE:
+  # Must wait for public access block to be applied before attaching the policy
   depends_on = [aws_s3_bucket_public_access_block.public_block]
 
   policy = jsonencode({
