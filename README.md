@@ -19,30 +19,33 @@ Professional cloud deployment of [HexGL](http://hexgl.bkcore.com), a futuristic 
 
 ## 🏗️ Architecture
 
+![AWS Architecture Diagram](./screenshots/hex-arc.drawio.png)
+
 | Component | Technology |
 |-----------|-----------|
 | Hosting | AWS S3 Static Website |
 | IaC | Terraform |
 | Containerization | Docker + Nginx |
 | CI/CD | GitHub Actions |
-| Region | eu-north-1 |
+| Region | eu-north-1 (Stockholm) |
 
 ---
 
 ## 🔄 CI/CD Pipeline
 
 Every push to `master` automatically validates the infrastructure and syncs the game to S3:
+
 ```
 Push to master
       ↓
-✅ terraform fmt     → format validation
+✅ terraform fmt      → format validation
 ✅ terraform validate → syntax check
-✅ terraform plan    → AWS impact preview
+✅ terraform plan     → AWS impact preview
       ↓
 ⏸️  Manual approval gate (production environment)
       ↓
-🚀 terraform apply   → provision infrastructure
-🚀 aws s3 sync       → deploy game files to S3
+🚀 terraform apply    → provision infrastructure
+🚀 aws s3 sync        → deploy game files to S3
 ```
 
 AWS credentials stored as **GitHub Secrets** — never hardcoded.
@@ -50,6 +53,7 @@ AWS credentials stored as **GitHub Secrets** — never hardcoded.
 ---
 
 ## 🚀 Local Development (Docker)
+
 ```bash
 docker build -t hexgl-game .
 docker run -d -p 8080:80 hexgl-game
@@ -57,6 +61,7 @@ docker run -d -p 8080:80 hexgl-game
 ```
 
 ## ☁️ Cloud Deployment (Terraform)
+
 ```bash
 cd terraform
 terraform init
@@ -67,10 +72,10 @@ terraform apply
 
 ## 📝 Lessons Learned
 
-- **CI/CD with GitHub Actions** — automated Terraform validation + S3 sync pipeline with manual approval gate for production
-- **Terraform race conditions** — resolved 403 errors caused by S3 Bucket Policy applying before PublicAccessBlock finished updating, fixed with explicit `depends_on`
-- **AWS CLI authentication** — debugged credential precedence issues with legacy SSO sessions, resolved using temporary environment variables for `eu-north-1`
-- **S3 static hosting** — configured index document routing for correct WebGL asset delivery
+* **CI/CD with GitHub Actions** — automated Terraform validation + S3 sync pipeline with manual approval gate for production.
+* **Terraform race conditions** — resolved 403 errors caused by S3 Bucket Policy applying before `PublicAccessBlock` finished updating, fixed with explicit `depends_on`.
+* **AWS CLI authentication** — debugged credential precedence issues with legacy SSO sessions, resolved using temporary environment variables for `eu-north-1`.
+* **S3 static hosting** — configured index document routing for correct WebGL asset delivery.
 
 ---
 
