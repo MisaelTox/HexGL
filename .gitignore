@@ -6,8 +6,6 @@
 *.tfvars
 *.tfvars.json
 
-# Terraform lock file 
-.terraform.lock.hcl
 
 # Docker logs and local data
 *.log
