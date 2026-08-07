@@ -7,7 +7,7 @@
 
 Professional cloud deployment of [HexGL](http://hexgl.bkcore.com), a futuristic WebGL racing game, showcasing IaC, containerization, and automated CI/CD on AWS.
 
-**🎮 [Play the game live on AWS S3](http://misael-hexgl-portfolio-2026.s3-website.eu-north-1.amazonaws.com)**
+> ℹ️ The live S3 deployment has been decommissioned. The screenshots below show the deployed result, and the infrastructure can be recreated from this repository with a single `terraform apply`.
 
 ---
 
@@ -33,19 +33,16 @@ Professional cloud deployment of [HexGL](http://hexgl.bkcore.com), a futuristic 
 
 ## 🔄 CI/CD Pipeline
 
-Every push to `master` automatically validates the infrastructure and syncs the game to S3:
+Every push and pull request validates the infrastructure and builds the Docker image — no AWS credentials required. Deploys are triggered manually from the Actions tab (`workflow_dispatch`) and pass through the `production` approval gate:
 
 ```
-Push to master
-      ↓
-✅ terraform fmt      → format validation
-✅ terraform validate → syntax check
-✅ terraform plan     → AWS impact preview
-      ↓
-⏸️  Manual approval gate (production environment)
-      ↓
-🚀 terraform apply    → provision infrastructure
-🚀 aws s3 sync        → deploy game files to S3
+Push / Pull Request              Manual trigger (Actions tab)
+        ↓                                    ↓
+✅ terraform fmt                    ⏸️  production approval gate
+✅ terraform validate                        ↓
+✅ docker build                     🚀 terraform apply
+                                    🚀 aws s3 sync
+   (no AWS credentials)
 ```
 
 AWS credentials stored as **GitHub Secrets** — never hardcoded.
